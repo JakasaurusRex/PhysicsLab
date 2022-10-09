@@ -35,17 +35,17 @@ def grapher(fileName):
     updateLI(df)
     updateMG(df)
     print(df)
-    sns.scatterplot(data=df, x="mg", y="iL", hue="I (A)")
+    sns.scatterplot(data=df, x="iL", y="mg", hue="I (A)")
     
     df1 = df.iloc[20:25 , :]
-    slope, intercept, r_value, p_value, std_err = stats.linregress(df1['mg'],df1['iL'])
+    slope, intercept, r_value, p_value, std_err = stats.linregress(df1['iL'],df1['mg'])
     print(std_err)
-    ax = sns.regplot(x="mg", y="iL", data=df1, line_kws={'label':"y={0:.2f}x±{1:.2f} when I = 2".format(slope,std_err)})
+    ax = sns.regplot(x="iL", y="mg", data=df1, line_kws={'label':"y={0:.3f}x±{1:.3f} when I = 2".format(slope,std_err)})
     
     ax.legend()
     plt.show()
     
-    magneticFields = [12.53, 15.16, 20.77, 17.89, 19.49]
+    magneticFields = [0.080, 0.066, 0.048, 0.054, 0.050]
     Ls = [4, 3.5, 3, 2.5, 2]
     plt.plot(Ls, magneticFields, linestyle = "", marker="o")
     plt.plot(np.unique(Ls), np.poly1d(np.polyfit(Ls, magneticFields, 1))(np.unique(Ls)))

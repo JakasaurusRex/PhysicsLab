@@ -1,0 +1,77 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Oct 15 14:58:35 2022
+
+@author: jaket
+"""
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy import stats
+from scipy.optimize import curve_fit
+
+def f(x, a, b):
+    return b * x + a
+
+def rms(y, yfit):
+    return np.sqrt(np.sum((y-yfit)**2))
+
+
+def lab4(fileName):
+    df = pd.read_csv(fileName)  
+    df = df.iloc[: , :8]
+    
+    x = df.iloc[0:5, :]["1/r"].to_numpy()
+    y = df.iloc[0:5, :]["I"].to_numpy()
+    err = df.iloc[0:5, :]["ierr"].to_numpy()
+    
+    
+    
+    plt.scatter(x, y, label="V = 100")
+    plt.errorbar(x, y, yerr=err, fmt="o")
+    plt.xlabel("1/r in meters")
+    plt.ylabel("I in Amps")
+    
+    x = df.iloc[5:10, :]["1/r"].to_numpy()
+    y = df.iloc[5:10, :]["I"].to_numpy()
+    err = df.iloc[5:10, :]["ierr"].to_numpy()
+    plt.scatter(x, y, label="V = 200")
+    plt.errorbar(x, y, yerr=err, fmt="o")
+    
+    x = df.iloc[10:15, :]["1/r"].to_numpy()
+    y = df.iloc[10:15, :]["I"].to_numpy()
+    err = df.iloc[10:15, :]["ierr"].to_numpy()
+    plt.scatter(x, y, label="V = 300")
+    plt.errorbar(x, y, yerr=err, fmt="o")
+    
+    popt2, pcov = curve_fit(f, x, y, [0.0, 0.0], err, absolute_sigma=True)
+    perr = np.sqrt(np.diag(pcov))
+    yfit2 = f(x, *popt2)
+    slope = float(round((yfit2[0]-yfit2[4])/(x[0]-x[4]), 3))
+    intercept = float(round(yfit2[4] - (slope * x[4]), 3))
+    label = f"Slope: {slope} Intercept: {intercept}"
+    plt.plot(x, yfit2, label=label)
+    plt.errorbar(x, yfit2, yerr=perr[0])
+    
+    x = df.iloc[15:20, :]["1/r"].to_numpy()
+    y = df.iloc[15:20, :]["I"].to_numpy()
+    err = df.iloc[15:20, :]["ierr"].to_numpy()
+    plt.scatter(x, y, label="V = 400")
+    plt.errorbar(x, y, yerr=err, fmt="o")
+    
+    x = df.iloc[20:25, :]["1/r"].to_numpy()
+    y = df.iloc[20:25, :]["I"].to_numpy()
+    err = df.iloc[20:25, :]["ierr"].to_numpy()
+    plt.scatter(x, y, label="V = 500")
+    plt.errorbar(x, y, yerr=err, fmt="o")
+    
+    
+    plt.xlabel("1/r in meters")
+    plt.ylabel("I in Amps")
+    
+    plt.legend(loc=4, prop={'size': 7})
+    plt.show()
+    
+

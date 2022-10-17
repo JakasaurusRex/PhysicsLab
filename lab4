@@ -46,14 +46,6 @@ def lab4(fileName):
     plt.scatter(x, y, label="V = 300")
     plt.errorbar(x, y, yerr=err, fmt="o")
     
-    popt2, pcov = curve_fit(f, x, y, [0.0, 0.0], err, absolute_sigma=True)
-    perr = np.sqrt(np.diag(pcov))
-    yfit2 = f(x, *popt2)
-    slope = float(round((yfit2[0]-yfit2[4])/(x[0]-x[4]), 3))
-    intercept = float(round(yfit2[4] - (slope * x[4]), 3))
-    label = f"Slope: {slope} Intercept: {intercept}"
-    plt.plot(x, yfit2, label=label)
-    plt.errorbar(x, yfit2, yerr=perr[0])
     
     x = df.iloc[15:20, :]["1/r"].to_numpy()
     y = df.iloc[15:20, :]["I"].to_numpy()
@@ -67,6 +59,15 @@ def lab4(fileName):
     plt.scatter(x, y, label="V = 500")
     plt.errorbar(x, y, yerr=err, fmt="o")
     
+    popt2, pcov = curve_fit(f, x, y, [0.0, 0.0], err, absolute_sigma=True)
+    perr = np.sqrt(np.diag(pcov))
+    print(perr)
+    yfit2 = f(x, *popt2)
+    slope = float(round((yfit2[0]-yfit2[4])/(x[0]-x[4]), 3))
+    intercept = float(round(yfit2[4] - (slope * x[4]), 3))
+    label = f"Slope: {slope} Intercept: {intercept}"
+    plt.plot(x, yfit2, label=label)
+    plt.errorbar(x, yfit2, yerr=perr[0])
     
     plt.xlabel("1/r in meters")
     plt.ylabel("I in Amps")

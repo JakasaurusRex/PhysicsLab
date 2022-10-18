@@ -12,6 +12,18 @@ import seaborn as sns
 from scipy import stats
 from scipy.optimize import curve_fit
 
+def calcRatio(slope, volt, err):
+    slope *= (8.05 * 10**-4)
+    squared = power([err, slope], 2)
+    print(squared)
+    squared[1] = squared[1]/(2 * volt)
+    print(squared)
+    return [1/squared[0], 1/squared[1]]
+    
+
+def power(a, n):
+    return [((a[0]/a[1]) * n) * (a[1]**n), a[1]**n]
+
 def f(x, a, b):
     return b * x + a
 
